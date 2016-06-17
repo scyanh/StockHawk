@@ -12,7 +12,7 @@
     <string name="input_hint" translatable="false">FB</string>
     <string name="input_prefill" translatable="false"></string>
     <string name="network_toast" translatable="false">Uh-oh! This app requires an internet connection</string>
-    <string name="widget_title" translatable="false">Today\'s Market</string>
+    <string name="widget_title" translatable="false">My Stocks</string>
     <string name="network_error" translatable="false">Due to unavailability of internet, list may be empty or out of date.</string>
     <string name="title_activity_stock_detail" translatable="false">StockDetailActivity</string>
 

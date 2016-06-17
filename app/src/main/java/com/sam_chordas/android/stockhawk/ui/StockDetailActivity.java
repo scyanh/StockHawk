@@ -41,6 +41,7 @@ public class StockDetailActivity extends AppCompatActivity implements
         Intent intent = getIntent();
         Bundle args = new Bundle();
         args.putString(getResources().getString(R.string.string_symbol), intent.getStringExtra(getResources().getString(R.string.string_symbol)));
+        setTitle(intent.getStringExtra(getResources().getString(R.string.string_symbol)));
         getLoaderManager().initLoader(CURSOR_LOADER_ID, args, this);
     }
 
