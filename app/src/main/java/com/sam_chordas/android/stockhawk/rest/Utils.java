@@ -20,6 +20,15 @@ public class Utils {
   private static String TAG = Utils.class.getSimpleName();
 
   public static boolean showPercent = true;
+    private static final String KEY_QUERY = "query";
+    private static final String KEY_COUNT = "count";
+    private static final String KEY_RESULTS = "results";
+    private static final String KEY_QUOTE = "quote";
+    private static final String KEY_CHANGE = "Change";
+    private static final String KEY_CHANGE_PERCENTAGE = "ChangeinPercent";
+    private static final String KEY_BID = "Bid";
+    private static final String KEY_ASK = "Ask";
+    private static final String KEY_NULL = "null";
 
   public static ArrayList quoteJsonToContentVals(String JSON){
     Log.i(TAG, "zz in quoteJsonToContentVals");
@@ -29,16 +38,15 @@ public class Utils {
     try{
       jsonObject = new JSONObject(JSON);
       if (jsonObject != null && jsonObject.length() != 0){
-        jsonObject = jsonObject.getJSONObject("query");
-        int count = Integer.parseInt(jsonObject.getString("count"));
+        jsonObject = jsonObject.getJSONObject(KEY_QUERY);
+        int count = Integer.parseInt(jsonObject.getString(KEY_COUNT));
         if (count == 1){
-          jsonObject = jsonObject.getJSONObject("results")
-              .getJSONObject("quote");
+          jsonObject = jsonObject.getJSONObject(KEY_RESULTS)
+              .getJSONObject(KEY_QUOTE);
 
           Log.i(TAG, "zz jsonObject="+jsonObject);
 
-          //TODO:
-          if(jsonObject.getString("Ask").equals("null")){
+          if(jsonObject.getString(KEY_ASK).equals(KEY_NULL)){
             Log.i(TAG, "zz Ask = null");
             batchOperations=null;
           }else{
@@ -88,23 +96,23 @@ public class Utils {
   public static ContentProviderOperation buildBatchOperation(JSONObject jsonObject){
     ContentProviderOperation.Builder builder = ContentProviderOperation.newInsert(
         QuoteProvider.Quotes.CONTENT_URI);
-    try {
-      String change = jsonObject.getString("Change");
-      builder.withValue(QuoteColumns.SYMBOL, jsonObject.getString("symbol"));
-      builder.withValue(QuoteColumns.BIDPRICE, truncateBidPrice(jsonObject.getString("Bid")));
-      builder.withValue(QuoteColumns.PERCENT_CHANGE, truncateChange(
-          jsonObject.getString("ChangeinPercent"), true));
-      builder.withValue(QuoteColumns.CHANGE, truncateChange(change, false));
-      builder.withValue(QuoteColumns.ISCURRENT, 1);
-      if (change.charAt(0) == '-'){
-        builder.withValue(QuoteColumns.ISUP, 0);
-      }else{
-        builder.withValue(QuoteColumns.ISUP, 1);
-      }
+      try {
+          String change = jsonObject.getString(KEY_CHANGE);
+          builder.withValue(QuoteColumns.SYMBOL, jsonObject.getString(QuoteColumns.SYMBOL));
+          builder.withValue(QuoteColumns.BIDPRICE, truncateBidPrice(jsonObject.getString(KEY_BID)));
+          builder.withValue(QuoteColumns.PERCENT_CHANGE, truncateChange(
+                  jsonObject.getString(KEY_CHANGE_PERCENTAGE), true));
+          builder.withValue(QuoteColumns.CHANGE, truncateChange(change, false));
+          builder.withValue(QuoteColumns.ISCURRENT, 1);
+          if (change.charAt(0) == '-') {
+              builder.withValue(QuoteColumns.ISUP, 0);
+          } else {
+              builder.withValue(QuoteColumns.ISUP, 1);
+          }
 
-    } catch (JSONException e){
-      e.printStackTrace();
-    }
+      } catch (JSONException e) {
+          e.printStackTrace();
+      }
     return builder.build();
   }
 }
